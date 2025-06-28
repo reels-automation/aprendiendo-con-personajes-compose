@@ -22,3 +22,9 @@ Microservicio que genera un prompt en base a un tema seleccionado. Utiliza una m
 ```bash
 docker compose up
 ```
+
+```bash
+cp .env.template .env
+```
+
+Completar las variables de entorno con los valores apropiadaos
