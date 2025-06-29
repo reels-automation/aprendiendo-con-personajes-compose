@@ -19,10 +19,11 @@ Microservicio que genera un prompt en base a un tema seleccionado. Utiliza una m
 
 ### Tts
 
+Microservicio que genera un audio en base a un texto. Es un fork de rvc-cli, el repositorio se puede encontrar [aca](https://github.com/reels-automation/tts-rvc)
+
 ### Subtitle Generator
 
 Microservicio que genera subtitulos en formato json según un mp3. Utiliza un archivo modelo de [VOSK](https://alphacephei.com/vosk/models) para procesar los subtitulos en un determinado idioma. El repositorio se encuentra [aca](https://github.com/reels-automation/reels-automation-subtitles-generator)
-
 
 ### Video Creator
 

@@ -26,6 +26,7 @@ services:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
     ports:
       - "80:80"
+    restart: unless-stopped
     environment:
       APP_API_URL: ${APP_API_URL}
     networks:
@@ -43,7 +44,23 @@ services:
       KAFKA_BROKER_DOCKER: ${KAFKA_BROKER_DOCKER}
       OLLAMA_IP_DOCKER: ${OLLAMA_IP_DOCKER}
     stdin_open: true   
-    tty: true          
+    tty: true
+    restart: unless-stopped        
+    
+  tts-rvc:
+    image: ${TTS_RVC_IMAGE}
+    environment:
+      PYTHONUNBUFFERED: 1
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      MINIO_ADDRESS: ${MINIO_ADDRESS}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      ADMIN_API: ${ADMIN_API}
+    restart: unless-stopped
+    networks:
+      - local-kafka
+      - minio-network
+      - minio-admin-files
 
   subtitle-generator:
     image: ghcr.io/reels-automation/reels-automation-subtitles-generator:main
@@ -82,6 +99,38 @@ services:
       stdin_open: true   
       tty: true
       restart: unless-stopped
+
+  minio-admin-files:
+    image: minio/minio:latest
+    container_name: minio-admin-files
+    restart: always
+    command: server --console-address :9001 /data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BROWSER_UPLOAD_LIMIT=10GiB
+    volumes:
+      - ${MINIO_FOLDER_LOCATION}:/data
+    ports:
+      - 9002:9000
+      - 9003:9001
+    networks:
+      - minio-admin-files
+  
+  api-minio-admin:
+    image: ghcr.io/reels-automation/admin-api:main
+    container_name: api-minio-admin
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_FOLDER_LOCATION: ${MINIO_FOLDER_LOCATION}
+      MINIO_URL: ${MINIO_URL_ADMIN}
+      MINIO_PORT: ${MINIO_PORT}
+    ports:
+        - "9999:9999"
+    networks:
+      - minio-admin-files
+    restart: unless-stopped
 
 networks:
   local-kafka:
