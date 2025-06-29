@@ -23,6 +23,11 @@ Microservicio que genera un prompt en base a un tema seleccionado. Utiliza una m
 
 Microservicio que genera subtitulos en formato json según un mp3. Utiliza un archivo modelo de [VOSK](https://alphacephei.com/vosk/models) para procesar los subtitulos en un determinado idioma. El repositorio se encuentra [aca](https://github.com/reels-automation/reels-automation-subtitles-generator)
 
+
+### Video Creator
+
+Microservicio que genera videos en base a un gameplay de fondo, audio y subtitulos en formato Json. El repositorio se encuentra [aca](https://github.com/reels-automation/reels-automation-video-creator).
+
 ## Como ejecutar
 
 ```bash

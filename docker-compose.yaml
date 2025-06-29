@@ -22,7 +22,6 @@ services:
       - mongo-network
       - minio-network
       
-
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
     ports:
@@ -64,7 +63,25 @@ services:
       - minio-admin-files
     volumes:
       - vosk-models:/app/voice_models
-
+  
+  video-creator:
+      image: ghcr.io/reels-automation/reels-automation-video-creator:main
+      networks:
+        - local-kafka
+        - minio-network
+        - minio-admin-files
+        - api-gateway
+      environment:
+        KAFKA_BROKER: ${KAFKA_BROKER}
+        KAFKA_BROKER_DOCKER: ${KAFKA_BROKER_DOCKER}
+        API_GATEWAY_URL: ${API_GATEWAY_URL}
+        MINIO_URL: ${MINIO_URL}
+        SECURE: ${SECURE}
+        ENVIRONMENT: ${ENVIRONMENT}
+        ADMIN_API: ${ADMIN_API}
+      stdin_open: true   
+      tty: true
+      restart: unless-stopped
 
 networks:
   local-kafka:
