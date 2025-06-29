@@ -18,6 +18,7 @@ services:
       - "7080:7080"
     networks:
       - local-kafka
+      - api-gateway
 
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
@@ -71,6 +72,9 @@ networks:
     external: true
   minio-network:
     external: true
+  api-gateway:
+    external: true
+      
 
 volumes:
       vosk-models:
