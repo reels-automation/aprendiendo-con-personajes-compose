@@ -19,6 +19,7 @@ services:
     networks:
       - local-kafka
       - api-gateway
+      - mongo-network
 
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
@@ -73,6 +74,8 @@ networks:
   minio-network:
     external: true
   api-gateway:
+    external: true
+  mongo-network:
     external: true
       
 
