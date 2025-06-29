@@ -20,6 +20,8 @@ services:
       - local-kafka
       - api-gateway
       - mongo-network
+      - minio-network
+      
 
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
