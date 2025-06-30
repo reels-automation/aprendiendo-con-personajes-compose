@@ -5,12 +5,12 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       ENVIRONMENT: ${ENVIRONMENT}
       JWT_KEY: ${JWT_KEY}
-      MINIO_URL: ${MINIO_URL}
+      MINIO_URL: ${MINIO_PUBLIC_URL}
       MONGO_URL: ${MONGO_URL}
       KAFKA_URL: ${KAFKA_URL}
       MERCADO_PAGO_ACCESS_TOKEN: ${MERCADO_PAGO_ACCESS_TOKEN}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
     container_name: api_gateway
     restart: unless-stopped
     user: $UID:$GID
@@ -38,10 +38,10 @@ services:
       - local-kafka
       - ollama-docker
     environment:
-      KAFKA_BROKER: ${KAFKA_BROKER}
+      KAFKA_BROKER: ${KAFKA_URL}
       OLLAMA_MODEL: ${OLLAMA_MODEL}
       OLLAMA_IP: ${OLLAMA_IP}
-      KAFKA_BROKER_DOCKER: ${KAFKA_BROKER_DOCKER}
+      KAFKA_BROKER_DOCKER: ${KAFKA_URL}
       OLLAMA_IP_DOCKER: ${OLLAMA_IP_DOCKER}
     stdin_open: true   
     tty: true
@@ -51,10 +51,10 @@ services:
     image: ${TTS_RVC_IMAGE}
     environment:
       PYTHONUNBUFFERED: 1
-      KAFKA_BROKER: ${KAFKA_BROKER}
-      MINIO_ADDRESS: ${MINIO_ADDRESS}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      KAFKA_BROKER: ${KAFKA_URL}
+      MINIO_ADDRESS: ${MINIO_PUBLIC_URL}
+      MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       ADMIN_API: ${ADMIN_API}
     restart: unless-stopped
     networks:
@@ -66,12 +66,12 @@ services:
     image: ghcr.io/reels-automation/reels-automation-subtitles-generator:main
     environment:
       PYTHONUNBUFFERED: 1
-      KAFKA_BROKER: ${KAFKA_BROKER}
-      KAFKA_BROKER_DOCKER: ${KAFKA_BROKER_DOCKER}
-      MINIO_URL: ${MINIO_URL}
-      MINIO_URL_DOCKER: ${MINIO_URL_DOCKER}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      KAFKA_BROKER: ${KAFKA_URL}
+      KAFKA_BROKER_DOCKER: ${KAFKA_URL}
+      MINIO_URL: ${MINIO_PUBLIC_URL}
+      MINIO_URL_DOCKER: ${MINIO_PUBLIC_URL}
+      MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       ADMIN_API: ${ADMIN_API}
     restart: unless-stopped
     networks:
@@ -89,10 +89,10 @@ services:
         - minio-admin-files
         - api-gateway
       environment:
-        KAFKA_BROKER: ${KAFKA_BROKER}
-        KAFKA_BROKER_DOCKER: ${KAFKA_BROKER_DOCKER}
+        KAFKA_BROKER: ${KAFKA_URL}
+        KAFKA_BROKER_DOCKER: ${KAFKA_URL}
         API_GATEWAY_URL: ${API_GATEWAY_URL}
-        MINIO_URL: ${MINIO_URL}
+        MINIO_URL: ${MINIO_PUBLIC_URL}
         SECURE: ${SECURE}
         ENVIRONMENT: ${ENVIRONMENT}
         ADMIN_API: ${ADMIN_API}
@@ -106,11 +106,11 @@ services:
     restart: always
     command: server --console-address :9001 /data
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_ROOT_USER=${MINIO_ADMIN_FILES_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_ADMIN_FILES_SECRET_KEY}
       - MINIO_BROWSER_UPLOAD_LIMIT=10GiB
     volumes:
-      - ${MINIO_FOLDER_LOCATION}:/data
+      - ${MINIO_ADMIN_FILES_FOLDER_LOCATION}:/data
     ports:
       - 9002:9000
       - 9003:9001
@@ -121,11 +121,11 @@ services:
     image: ghcr.io/reels-automation/admin-api:main
     container_name: api-minio-admin
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_FOLDER_LOCATION: ${MINIO_FOLDER_LOCATION}
-      MINIO_URL: ${MINIO_URL_ADMIN}
-      MINIO_PORT: ${MINIO_PORT}
+      MINIO_ROOT_USER: ${MINIO_ADMIN_FILES_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_ADMIN_FILES_SECRET_KEY}
+      MINIO_FOLDER_LOCATION: ${MINIO_ADMIN_FILES_FOLDER_LOCATION}
+      MINIO_URL: ${MINIO_ADMIN_FILES_URL_ADMIN}
+      MINIO_PORT: ${MINIO_ADMIN_FILES_PORT}
     ports:
         - "9999:9999"
     networks:
