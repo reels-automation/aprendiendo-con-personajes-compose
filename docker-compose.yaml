@@ -117,21 +117,6 @@ services:
     networks:
       - minio-admin-files
 
-  createbuckets-admin-files:
-    image: minio/minio:latest
-    container_name: createbuckets-admin-files
-    depends_on:
-      - minio-admin-files
-    restart: on-failure
-    networks:
-      - minio-admin-files
-    environment:
-      - MINIO_ADMIN_FILES_ACCESS_KEY=${MINIO_ADMIN_FILES_ACCESS_KEY}
-      - MINIO_ADMIN_FILES_SECRET_KEY=${MINIO_ADMIN_FILES_SECRET_KEY}
-    volumes:
-      - ./create_minio_admin_bucket.sh:/create_minio_admin_bucket.sh:ro
-    entrypoint: /bin/sh /create_minio_admin_bucket.sh
-  
   api-minio-admin:
     image: ghcr.io/reels-automation/admin-api:main
     container_name: api-minio-admin
