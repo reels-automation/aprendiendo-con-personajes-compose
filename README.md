@@ -31,11 +31,24 @@ Microservicio que genera videos en base a un gameplay de fondo, audio y subtitul
 
 ## Como ejecutar
 
+### Copiar variables de entorno
+
 ```bash
 cp .env.template .env
 ```
 
 Completar las variables de entorno con los valores apropiadaos
+
+### Crear networks
+
+Se deben crear las networks externas de los contenedores
+
+```bash
+chmod +x create_networks.sh
+./create_networks.sh
+```
+
+### Ejecutar docker compose
 
 ```bash
 docker compose up
