@@ -55,7 +55,7 @@ services:
       MINIO_ADDRESS: ${MINIO_PUBLIC_URL}
       MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
-      ADMIN_API: ${ADMIN_API}
+      ADMIN_API: ${DOP}
     restart: unless-stopped
     networks:
       - local-kafka
