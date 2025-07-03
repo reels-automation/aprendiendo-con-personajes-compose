@@ -13,7 +13,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       MINIO_PUBLIC_URL_SIGN_FILES: ${MINIO_PUBLIC_URL_SIGN_FILES}
     container_name: api_gateway
-    restart: unless-stopped
+    restart: always
     user: $UID:$GID
     ports:
       - "7080:7080"
@@ -27,7 +27,7 @@ services:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
     ports:
       - "80:80"
-    restart: unless-stopped
+    restart: always
     environment:
       APP_API_URL: ${APP_API_URL}
     networks:
@@ -46,7 +46,7 @@ services:
       OLLAMA_IP_DOCKER: ${OLLAMA_IP_DOCKER}
     stdin_open: true   
     tty: true
-    restart: unless-stopped        
+    restart: always    
     
   tts-rvc:
     image: ${TTS_RVC_IMAGE}
@@ -57,7 +57,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       ADMIN_API: ${DOP}
-    restart: unless-stopped
+    restart: always
     networks:
       - local-kafka
       - minio-network
@@ -74,7 +74,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       ADMIN_API: ${ADMIN_API}
-    restart: unless-stopped
+    restart: always
     networks:
       - local-kafka
       - minio-network
@@ -102,7 +102,7 @@ services:
 
       stdin_open: true   
       tty: true
-      restart: unless-stopped
+      restart: always
 
 
 
