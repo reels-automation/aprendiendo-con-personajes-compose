@@ -40,10 +40,8 @@ services:
       - ollama-docker
     environment:
       KAFKA_BROKER: ${KAFKA_URL}
-      OLLAMA_MODEL: ${OLLAMA_MODEL}
       OLLAMA_IP: ${OLLAMA_IP}
       KAFKA_BROKER_DOCKER: ${KAFKA_URL}
-      OLLAMA_IP_DOCKER: ${OLLAMA_IP_DOCKER}
     stdin_open: true   
     tty: true
     restart: always    
