@@ -86,14 +86,17 @@ services:
       image: ghcr.io/reels-automation/video-creator:main
       environment:
         KAFKA_BROKER: ${KAFKA_URL}
-        PUBLIC_MINIO_URL: ${MINIO_PUBLIC_ACCESS_KEY}
-        PUBLIC_MINIO_ACCESS_KEY: ${MINIO_PUBLIC_SECRET_KEY}
-        PUBLIC_MINIO_SECRET_KEY: ${MINIO_PUBLIC_URL_SIGN_FILES}
+        PUBLIC_MINIO_URL: ${MINIO_PUBLIC_URL}
+        PUBLIC_MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
+        PUBLIC_MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
         API_GATEWAY_URL: ${API_GATEWAY_URL}
         USESSL: ${USESSL}
       restart: always
       networks:
         - local-kafka
+        - minio-network
+        - minio-admin-files
+        - api-gateway
 
 networks:
   local-kafka:
