@@ -12,6 +12,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       MINIO_PUBLIC_URL_SIGN_FILES: ${MINIO_PUBLIC_URL_SIGN_FILES}
+      OLLAMA_IP: ${OLLAMA_IP_API}
     container_name: api_gateway
     restart: always
     user: $UID:$GID
@@ -22,6 +23,7 @@ services:
       - api-gateway
       - mongo-network
       - minio-network
+      - ollama-docker
       
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
@@ -49,7 +51,7 @@ services:
     restart: always    
     
   tts-rvc:
-    image: ${TTS_RVC_IMAGE}
+    image: ${TTS_RVC_IMAGE} 
     environment:
       PYTHONUNBUFFERED: 1
       KAFKA_BROKER: ${KAFKA_URL}
@@ -81,30 +83,19 @@ services:
       - minio-admin-files
     volumes:
       - vosk-models:/app/voice_models
-  
+
   video-creator:
-      image: ghcr.io/reels-automation/reels-automation-video-creator:main
-      networks:
-        - local-kafka
-        - minio-network
-        - minio-admin-files
-        - api-gateway
+      image: ghcr.io/reels-automation/video-creator:main
       environment:
         KAFKA_BROKER: ${KAFKA_URL}
-        KAFKA_BROKER_DOCKER: ${KAFKA_URL}
+        PUBLIC_MINIO_URL: ${MINIO_PUBLIC_ACCESS_KEY}
+        PUBLIC_MINIO_ACCESS_KEY: ${MINIO_PUBLIC_SECRET_KEY}
+        PUBLIC_MINIO_SECRET_KEY: ${MINIO_PUBLIC_URL_SIGN_FILES}
         API_GATEWAY_URL: ${API_GATEWAY_URL}
-        MINIO_URL: ${MINIO_PUBLIC_URL}
-        SECURE: ${SECURE}
-        ENVIRONMENT: ${ENVIRONMENT}
-        ADMIN_API: ${ADMIN_API_NO_BACKSLASH}
-        PUBLIC_MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
-        PUBLIC_MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
-
-      stdin_open: true   
-      tty: true
+        USESSL: ${USESSL}
       restart: always
-
-
+      networks:
+        - local-kafka
 
 networks:
   local-kafka:
@@ -120,6 +111,5 @@ networks:
   mongo-network:
     external: true
       
-
 volumes:
       vosk-models:
