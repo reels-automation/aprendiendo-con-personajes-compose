@@ -13,6 +13,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
       MINIO_PUBLIC_URL_SIGN_FILES: ${MINIO_PUBLIC_URL_SIGN_FILES}
       OLLAMA_IP: ${OLLAMA_IP_API}
+      ADMIN_API: ${ADMIN_API_NO_BACKSLASH}
     container_name: api_gateway
     restart: always
     user: $UID:$GID
@@ -24,6 +25,7 @@ services:
       - mongo-network
       - minio-network
       - ollama-docker
+      - minio-admin-files
       
   frontend:
     image: ghcr.io/reels-automation/reels-automation-frontend-new:main
@@ -90,6 +92,7 @@ services:
         PUBLIC_MINIO_ACCESS_KEY: ${MINIO_PUBLIC_ACCESS_KEY}
         PUBLIC_MINIO_SECRET_KEY: ${MINIO_PUBLIC_SECRET_KEY}
         API_GATEWAY_URL: ${API_GATEWAY_URL}
+        ADMIN_API: ${ADMIN_API_NO_BACKSLASH}
         USESSL: ${USESSL}
       restart: always
       networks:
